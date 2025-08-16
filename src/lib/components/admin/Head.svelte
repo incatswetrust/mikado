@@ -1,9 +1,10 @@
 <script lang="ts">
+    export let icon;
     import { onMount } from 'svelte';
     let q = '';
 
     onMount(async () => {
-        const { initFlowbite } = await import('flowbite'); // активирует collapse & dropdown
+        const { initFlowbite } = await import('flowbite'); // активация collapse & dropdown
         initFlowbite();
     });
 
@@ -13,11 +14,11 @@
     };
 </script>
 
-<header class="sticky top-0 z-50 border-b border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700">
+<header class="sticky top-0 z-40 border-b border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700">
     <div class="h-16 max-w-screen-xl mx-auto px-4 lg:px-6 flex items-center gap-3">
-        <!-- ЛОГО -->
+        
         <a href="/" class="flex items-center gap-2 shrink-0">
-            <img src="src/lib/assets/icon.svg" class="h-6 sm:h-8" alt="Logo" />
+            <img src={icon} class="h-6 sm:h-8" alt="Logo" />
             <span class="hidden sm:inline text-lg font-semibold dark:text-white">Mikado CRM</span>
         </a>
         
@@ -37,9 +38,8 @@
             </label>
         </form>
 
-        <!-- ПРАВАЯ ПАНЕЛЬ -->
+        
         <div class="ml-auto flex items-center gap-1">
-            <!-- Кнопка открытия поиска на мобилках -->
             <button
                     data-collapse-toggle="mobile-search"
                     aria-controls="mobile-search"
@@ -50,20 +50,19 @@
                 <svg class="w-6 h-6" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 102.546 7.06l3.697 3.697a1 1 0 001.414-1.414l-3.697-3.697A4 4 0 008 4z" clip-rule="evenodd"/></svg>
             </button>
 
-            <!-- Уведомления -->
             <button class="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200
                      dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-label="Notifications">
                 <svg class="w-6 h-6" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v2.586l-.707.707A1 1 0 004 13h12a1 1 0 00.707-1.707L16 10.586V8a6 6 0 00-6-6z"/><path d="M7 14a3 3 0 006 0H7z"/></svg>
                 <span class="absolute -top-0.5 -right-0.5 inline-flex h-2.5 w-2.5 rounded-full bg-red-500"></span>
             </button>
 
-            <!-- Сообщения -->
+            
             <button class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200
                      dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-label="Messages">
                 <svg class="w-6 h-6" viewBox="0 0 20 20" fill="currentColor"><path d="M18 5a2 2 0 00-2-2H4a2 2 0 00-2 2v9a2 2 0 002 2h3l3 2 3-2h3a2 2 0 002-2V5z"/></svg>
             </button>
 
-            <!-- Аватар + дропдаун -->
+           
             <button
                     type="button"
                     data-dropdown-toggle="user-menu"
@@ -88,7 +87,6 @@
         </div>
     </div>
 
-    <!-- МОБИЛЬНЫЙ ПОИСК (раскрывается по кнопке) -->
     <div id="mobile-search" class="hidden md:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
         <form on:submit|preventDefault={submit} class="px-4 py-3">
             <label class="relative block">
