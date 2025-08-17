@@ -4,6 +4,7 @@ import { z } from 'zod';
 import argon2 from 'argon2';
 import { db, schema } from '$lib/server/db/client';
 import {employeeListDtoCols} from "$lib/server/db/views";
+import {sql} from "drizzle-orm";
 
 const { employees } = schema;
 
@@ -17,13 +18,38 @@ const createEmployeeSchema = z.object({
     note: z.string().optional().default('')
 });
 
-// GET /api/employees 
-export const GET: RequestHandler = async () => {
-    const rows = await db.select(employeeListDtoCols).from(employees)
-        .orderBy(employees.name);
-    return json(rows);
-};
+// GET /api/employees
 
+export const GET: RequestHandler = async ({ url }) => {
+    const limit = 10;
+    const pageParam = url.searchParams.get('page') ?? '1';
+    const page = Math.max(1, Number(pageParam) || 1);
+    const offset = (page - 1) * limit;
+
+    const [rows, totalRes] = await Promise.all([
+        db.select(employeeListDtoCols)
+            .from(employees)
+            .orderBy(employees.name)     
+            .limit(limit)
+            .offset(offset),
+        db.select({ count: sql<number>`count(*)` }).from(employees)
+    ]);
+
+    const total = Number(totalRes[0]?.count ?? 0);
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+
+    return json({
+        data: rows,
+        meta: {
+            page,
+            perPage: limit,
+            total,
+            totalPages,
+            hasPrev: page > 1,
+            hasNext: page < totalPages
+        }
+    });
+};
 // POST /api/employees 
 export const POST: RequestHandler = async ({ request }) => {
     const body = await request.json().catch(() => null);

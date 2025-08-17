@@ -1,7 +1,14 @@
 import axios from 'axios';
-import { EmployeeListItemDtoSchema, type EmployeeListItemDto } from '$lib/dto/employee';
 
-export async function getEmployees(): Promise<EmployeeListItemDto[]> {
-    const { data } = await axios.get('/api/employees');
-    return EmployeeListItemDtoSchema.array().parse(data); 
+export type EmployeeListItemDto = {
+    id: string; name: string; category: string; status: string; phone: string; hire_date: string;
+};
+export type Paged<T> = {
+    data: T[];
+    meta: { page: number; perPage: number; total: number; totalPages: number; hasPrev: boolean; hasNext: boolean; };
+};
+
+export async function getEmployees(page = 1): Promise<Paged<EmployeeListItemDto>> {
+    const { data } = await axios.get<Paged<EmployeeListItemDto>>(`/api/employees?page=${page}`);
+    return data;
 }
