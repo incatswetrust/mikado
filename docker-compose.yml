@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: pg
+    environment:
+      POSTGRES_USER: crm
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: crmdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/initdb:/docker-entrypoint-initdb.d
+
+
+ 
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports: ["8080:8080"]
+    depends_on: [db]
+
+volumes:
+  pgdata:

@@ -3,6 +3,7 @@ import { json, error } from '@sveltejs/kit';
 import { z } from 'zod';
 import argon2 from 'argon2';
 import { db, schema } from '$lib/server/db/client';
+import {employeeListDtoCols} from "$lib/server/db/views";
 
 const { employees } = schema;
 
@@ -18,18 +19,8 @@ const createEmployeeSchema = z.object({
 
 // GET /api/employees 
 export const GET: RequestHandler = async () => {
-    const rows = await db
-        .select({
-            id: employees.id,
-            name: employees.name,
-            category: employees.category,
-            status: employees.status,
-            phone: employees.phone,
-            hire_date: employees.hireDate
-        })
-        .from(employees)
+    const rows = await db.select(employeeListDtoCols).from(employees)
         .orderBy(employees.name);
-
     return json(rows);
 };
 
@@ -38,7 +29,7 @@ export const POST: RequestHandler = async ({ request }) => {
     const body = await request.json().catch(() => null);
     const parsed = createEmployeeSchema.safeParse(body);
     if (!parsed.success) {
-        throw error(400, { message: 'Invalid payload'});
+        throw error(400, { message: 'Invalid payload', details: parsed.error.format()});
     }
 
     const { name, category, status, phone, login, password, note } = parsed.data;

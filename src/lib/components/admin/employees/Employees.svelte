@@ -2,6 +2,14 @@
     import EmployeeTableHead from "$lib/components/admin/employees/EmployeeTableHead.svelte";
     import EmployeeTableUnit from "$lib/components/admin/employees/EmployeeTableUnit.svelte";
     import AddEmployee from "$lib/components/admin/employees/AddEmployee.svelte";
+    import {createQuery, useQueryClient} from "@tanstack/svelte-query";
+    import type {EmployeeListItemDto} from "$lib/dto/employee";
+    import {getEmployees} from "$lib/api/employees";
+    $:employees = createQuery<EmployeeListItemDto[]>({
+        queryKey: ['employees'],
+        queryFn: async() =>  await getEmployees(),
+    })
+    
 </script>
 <div class="mx-auto max-w-screen-xl p-3 sm:p-5 ">
         <!-- Start coding here -->
@@ -85,11 +93,14 @@
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <EmployeeTableHead/>
                     <tbody>
-                    <EmployeeTableUnit/>
-                    <EmployeeTableUnit/>
-                    <EmployeeTableUnit/>
-                    <EmployeeTableUnit/>
-                    <EmployeeTableUnit/>
+                    {#if $employees.isPending}
+                        <h1>Loading...</h1>
+                    {/if}
+                    {#if $employees.isSuccess}
+                        {#each $employees.data as employee}
+                            <EmployeeTableUnit employee={employee}/>
+                        {/each}
+                    {/if}
                     </tbody>
                 </table>
             </div>
