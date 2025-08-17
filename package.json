@@ -43,6 +43,7 @@
 	"dependencies": {
 		"@tanstack/svelte-query": "^5.85.3",
 		"argon2": "^0.44.0",
+		"axios": "^1.11.0",
 		"drizzle-orm": "^0.44.4",
 		"flowbite": "^3.1.2",
 		"pg": "^8.16.3",

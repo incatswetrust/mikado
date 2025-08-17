@@ -1,4 +1,60 @@
-<div id="defaultModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+<script lang="ts">
+    import axios from 'axios';
+    import {
+        useQueryClient,
+        createQuery,
+        createMutation,
+    } from '@tanstack/svelte-query'
+    import {onMount} from "svelte";
+
+    let modalEl: HTMLDivElement;
+    let modal: any;
+    onMount(async () => {
+        const { Modal } = await import('flowbite');
+        modal = new Modal(modalEl);
+    });
+
+    const client = useQueryClient();
+    type CreateEmployeeInput = {
+        name: string;
+        category: string;
+        status: 'active' | 'inactive' | 'on_leave';
+        phone: string;
+        login: string;
+        password: string;
+        note?: string;
+    };
+
+    let form: CreateEmployeeInput = {
+        name: '',
+        category: '',
+        status: 'active',
+        phone: '',
+        login: '',
+        password: '',
+        note: ''
+    };
+    const addEmployee = async (payload: CreateEmployeeInput) => {
+        const { data } = await axios.post('/api/employees', payload);
+        return data;
+    };
+
+    const addMutation = createMutation({
+        mutationFn: addEmployee,
+        onSuccess: () => {
+            client.invalidateQueries({ queryKey: ['employees'] });
+            form = { name: '', category: '', status: 'active', phone: '', login: '', password: '', note: '' };
+            modal.hide();
+        }
+    });
+
+    function submit(e: Event) {
+        e.preventDefault();
+        $addMutation.mutate(form);
+    }
+</script>
+
+<div id="defaultModal" bind:this={modalEl} tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
     <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
         <!-- Modal content -->
         <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
@@ -13,7 +69,7 @@
                 </button>
             </div>
             <!-- Modal body -->
-            <form action="#">
+            <form on:submit|preventDefault={submit}>
                 <div class="grid gap-4 mb-4 sm:grid-cols-2">
                     <div>
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
@@ -27,7 +83,7 @@
                                     <path d="M18 13.446a3.02 3.02 0 0 0-.946-1.985l-1.4-1.4a3.054 3.054 0 0 0-4.218 0l-.7.7a.983.983 0 0 1-1.39 0l-2.1-2.1a.983.983 0 0 1 0-1.389l.7-.7a2.98 2.98 0 0 0 0-4.217l-1.4-1.4a2.824 2.824 0 0 0-4.218 0c-3.619 3.619-3 8.229 1.752 12.979C6.785 16.639 9.45 18 11.912 18a7.175 7.175 0 0 0 5.139-2.325A2.9 2.9 0 0 0 18 13.446Z"/>
                                 </svg>
                             </div>
-                            <input type="text" id="phone-input" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" required />
+                            <input type="text" id="phone-input" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  placeholder="123-456-7890" required />
                         </div>
                     </div>
                     <div>
@@ -63,7 +119,7 @@
                 </div>
                 <button type="submit" class="text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     <svg class="mr-1 -ml-1 w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                    Add new product
+                    Add new employee
                 </button>
             </form>
         </div>
