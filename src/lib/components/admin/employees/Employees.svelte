@@ -2,13 +2,15 @@
     import EmployeeTableHead from "$lib/components/admin/employees/EmployeeTableHead.svelte";
     import EmployeeTableUnit from "$lib/components/admin/employees/EmployeeTableUnit.svelte";
     import AddEmployee from "$lib/components/admin/employees/AddEmployee.svelte";
-    import {createQuery, useQueryClient} from "@tanstack/svelte-query";
+    import {createQuery} from "@tanstack/svelte-query";
     import type {EmployeeListItemDto} from "$lib/dto/employee";
     import {getEmployees} from "$lib/api/employees";
+    import {onMount} from "svelte";
     $:employees = createQuery<EmployeeListItemDto[]>({
         queryKey: ['employees'],
         queryFn: async() =>  await getEmployees(),
-    })
+    });
+    
     
 </script>
 <div class="mx-auto max-w-screen-xl p-3 sm:p-5 ">

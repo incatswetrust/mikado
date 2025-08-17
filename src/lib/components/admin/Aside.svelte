@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
     onMount(async () => {
         const { initDrawers } = await import('flowbite');
-        initDrawers(); // активирует data-drawer-*
+        initDrawers(); 
     });
 </script>
 
