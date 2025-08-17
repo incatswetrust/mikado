@@ -16,7 +16,7 @@ const createEmployeeSchema = z.object({
     note: z.string().optional().default('')
 });
 
-// GET /api/employees  -> список (только нужные поля)
+// GET /api/employees 
 export const GET: RequestHandler = async () => {
     const rows = await db
         .select({
@@ -33,7 +33,7 @@ export const GET: RequestHandler = async () => {
     return json(rows);
 };
 
-// POST /api/employees -> создать (возвращаем те же поля)
+// POST /api/employees 
 export const POST: RequestHandler = async ({ request }) => {
     const body = await request.json().catch(() => null);
     const parsed = createEmployeeSchema.safeParse(body);
