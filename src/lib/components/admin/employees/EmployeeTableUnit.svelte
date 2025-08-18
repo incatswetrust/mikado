@@ -8,9 +8,8 @@
     const deletetrigger = `${employee.id}-deletemodal`;
     const deletebutton = `${employee.id}-deletebutton`;
     onMount(async () => {
-        const { initDropdowns } = await import('flowbite');
+        const { initDropdowns, initModals } = await import('flowbite');
         initDropdowns();
-        const { initModals } = await import('flowbite');
         initModals();
     });
 </script>
