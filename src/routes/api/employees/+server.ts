@@ -18,8 +18,8 @@ const createEmployeeSchema = z.object({
     note: z.string().optional().default('')
 });
 
-// GET /api/employees
 
+// GET /api/employees
 export const GET: RequestHandler = async ({ url }) => {
     const limit = 10;
     const pageParam = url.searchParams.get('page') ?? '1';

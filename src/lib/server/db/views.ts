@@ -8,3 +8,8 @@ export const employeeListDtoCols = {
     phone: employees.phone,
     hire_date: employees.hireDate  
 } as const;
+
+export const employeeDetailsDtoCols = {
+    ...employeeListDtoCols,
+    note: employees.note
+} as const;
