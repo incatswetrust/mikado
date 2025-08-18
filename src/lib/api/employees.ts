@@ -11,4 +11,8 @@ export type Paged<T> = {
 export async function getEmployees(page = 1): Promise<Paged<EmployeeListItemDto>> {
     const { data } = await axios.get<Paged<EmployeeListItemDto>>(`/api/employees?page=${page}`);
     return data;
-}
+};
+
+export async function deleteEmployee(id: string): Promise<void> {
+    await axios.delete(`/api/employees/${id}`);
+};

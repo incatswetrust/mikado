@@ -1,14 +1,20 @@
 <script lang="ts">
     import type {EmployeeListItemDto} from "$lib/dto/employee";
     import {onMount} from "svelte";
+    import DeleteEmployee from "$lib/components/admin/employees/DeleteEmployee.svelte";
     export let employee: EmployeeListItemDto;
     const triggerId = `${employee.id}-dropdown-button`;
     const dropdownId = `${employee.id}-dropdown`;
+    const deletetrigger = `${employee.id}-deletemodal`;
+    const deletebutton = `${employee.id}-deletebutton`;
     onMount(async () => {
         const { initDropdowns } = await import('flowbite');
-        initDropdowns(); 
+        initDropdowns();
+        const { initModals } = await import('flowbite');
+        initModals();
     });
 </script>
+
 <tr class="border-b dark:border-gray-700">
     <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{employee.name}</th>
     <td class="px-4 py-3">{employee.category}</td>
@@ -31,8 +37,11 @@
                 </li>
             </ul>
             <div class="py-1">
-                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
+                <button id={deletebutton} data-modal-target={deletetrigger} data-modal-toggle={deletetrigger} class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" type="button">Delete</button>
             </div>
         </div>
     </td>
 </tr>
+
+<DeleteEmployee id={employee.id}/>
+   
