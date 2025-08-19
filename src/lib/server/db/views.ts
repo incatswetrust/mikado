@@ -6,7 +6,7 @@ export const employeeListDtoCols = {
     category: employees.category,
     status: employees.status,
     phone: employees.phone,
-    hire_date: employees.hireDate  
+    hire_date: employees.hireDate
 } as const;
 
 export const employeeDetailsDtoCols = {
