@@ -2,14 +2,11 @@
     import type {EmployeeListItemDto} from "$lib/dto/employee";
     import {onMount} from "svelte";
     import DeleteEmployee from "$lib/components/admin/employees/DeleteEmployee.svelte";
-    import EditEmployee from "$lib/components/admin/employees/EditEmployee.svelte";
     export let employee: EmployeeListItemDto;
     const triggerId = `${employee.id}-dropdown-button`;
     const dropdownId = `${employee.id}-dropdown`;
     const deletetrigger = `${employee.id}-deletemodal`;
     const deletebutton = `${employee.id}-deletebutton`;
-    const edittrigger = `${employee.id}-editmodal`;
-    const editbutton = `${employee.id}-editbutton`;
     
     onMount(async () => {
         const { initDropdowns, initModals } = await import('flowbite');
