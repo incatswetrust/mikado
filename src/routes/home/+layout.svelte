@@ -8,5 +8,4 @@
 <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head>
-<h1>Юзер страница</h1>
 {@render children?.()}
